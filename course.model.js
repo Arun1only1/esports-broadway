@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 // set rule/schema
+// rule means schema
 const courseSchema = new mongoose.Schema({
   name: String,
   duration: Number,
