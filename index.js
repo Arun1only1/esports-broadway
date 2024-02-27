@@ -83,6 +83,50 @@ app.delete("/course/delete/:id", async (req, res) => {
   // send response
   return res.status(200).send({ message: "Course is deleted successfully." });
 });
+
+// ?edit
+app.put("/course/edit/:id", async (req, res) => {
+  // extract courseId from req.params
+  const courseId = req.params.id;
+
+  // check for mongo id validity
+  const isValidMongoId = mongoose.isValidObjectId(courseId);
+
+  // if not valid, throw error
+  if (!isValidMongoId) {
+    return res.status(400).send({ message: "Invalid mongo id." });
+  }
+
+  // find course by id
+  const requiredCourse = await Course.findOne({ _id: courseId });
+
+  // if not course, throw error
+
+  if (!requiredCourse) {
+    return res.status(404).send({ message: "Course does not exist." });
+  }
+
+  // get new values from req.body
+  const newValues = req.body;
+
+  // edit product
+
+  await Course.updateOne(
+    { _id: courseId },
+    {
+      $set: {
+        name: newValues.name,
+        price: newValues.price,
+        tutorName: newValues.tutorName,
+        duration: newValues.duration,
+      },
+    }
+  );
+
+  // send response
+  return res.status(200).send({ message: "Course is updated successfully." });
+});
+
 // ================================port and server==============================================
 const PORT = 8000;
 
